@@ -3,7 +3,7 @@
   <ion-toolbar>
     <ion-title>Job List</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="addJob()" fill="outline">Add
+      <ion-button (click)="addJob()" fill="outline" color="primary">Add
         <!-- <ion-icon slot="icon-only" name="add-outline"></ion-icon> -->
       </ion-button>
     </ion-buttons>
@@ -13,7 +13,15 @@
 <ion-content>
   <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
   <ion-list>
-    
+    <ion-grid>
+      <ion-row>
+        <ion-col>Title</ion-col>
+        <ion-col>Company</ion-col>
+        <ion-col>Level</ion-col>
+        <ion-col>Status</ion-col>
+        <ion-col>Action</ion-col>
+      </ion-row>
+    </ion-grid>
     <ion-item *ngFor="let job of filteredJobs$ | async">
       <ion-label>
         <h2>{{ job.name }}</h2>

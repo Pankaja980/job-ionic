@@ -16,20 +16,20 @@ import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 //import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { Observable, BehaviorSubject, combineLatest, map } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, map,of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { loadJobLevels, loadJobs,  } from '../../store/actions';
 import { selectJobLevels, selectJobs } from '../../store/selector';
 import { Job } from '../../models/job';
 //import { HttpClient } from '@angular/common/http';
 //import { startWith } from 'rxjs/operators';
-
+import {IonicModule} from '@ionic/angular'; 
 @Component({
   selector: 'app-job-level-selector-component',
   templateUrl: './job-level-selector-component.component.html',
   styleUrls: ['./job-level-selector-component.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IonicModule],
  
 })
 export class JobCategorySelectorComponent implements OnInit {

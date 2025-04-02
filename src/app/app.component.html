@@ -1,4 +1,27 @@
-<ion-app>
+<!-- <ion-app>
   <ion-router-outlet></ion-router-outlet>
   <app-job-list></app-job-list>
-</ion-app>
+</ion-app> -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Job Tracker</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Job Level Selector (Filter) -->
+  <!-- <app-job-level-selector
+    [levels]="levels$ | async"
+    (levelSelected)="onLevelSelected($event)">
+  </app-job-level-selector> -->
+
+  <!-- Job List Display -->
+  <app-job-list></app-job-list>
+
+  <!-- Floating Action Button to Open Job Form -->
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddJobModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button> -->
+  <!-- </ion-fab> -->
+</ion-content>
