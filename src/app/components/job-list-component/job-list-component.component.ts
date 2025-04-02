@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Store } from '@ngrx/store';
+import { Store,select } from '@ngrx/store';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 //import { TableModule } from 'primeng/table';
@@ -11,6 +11,8 @@ import { map } from 'rxjs/operators';
 import { Job } from '../../models/job';
 import * as JobActions from '../../store/actions';
 import { selectJobs ,selectJobStatusCounts} from '../../store/selector';
+import{ IonicModule } from '@ionic/angular';
+import { IonSearchbar, IonList, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular';
 import { JobFormComponent } from '../job-form-component/job-form-component.component';
 // import { ButtonModule } from 'primeng/button';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -27,10 +29,12 @@ import {
   FormsModule,
   FormGroup,
   FormControl,
+  FormBuilder,
   
   Validators,
 } from '@angular/forms';
 import { JobCategorySelectorComponent } from '../job-level-selector-component/job-level-selector-component.component';
+import { JobService } from 'src/app/services/job.service';
 // import { ChartData } from 'chart.js';
 //import { JobItemComponent } from '../job-item/job-item.component';
 //import { addJob } from '../../state/job-category/actions';
@@ -48,6 +52,7 @@ import { JobCategorySelectorComponent } from '../job-level-selector-component/jo
     // ButtonModule,
     // ConfirmDialogModule,
     // DropdownModule,
+    IonicModule,
     FormsModule,
     JobFormComponent,
     // IconFieldModule,
@@ -124,6 +129,8 @@ export class JobListComponent implements OnInit {
 
   constructor(
     private store: Store,
+    private jobService: JobService,
+    private formBuilder: FormBuilder,
     // private messageService: MessageService,
     // private confirmationService: ConfirmationService,
     private cdr: ChangeDetectorRef ,//to trigger change detection and the view is updated.

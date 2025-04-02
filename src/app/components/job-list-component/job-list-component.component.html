@@ -1,0 +1,31 @@
+<!-- job-list-component.component.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Job List</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addJob()" fill="outline">Add
+        <!-- <ion-icon slot="icon-only" name="add-outline"></ion-icon> -->
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
+  <ion-list>
+    
+    <ion-item *ngFor="let job of filteredJobs$ | async">
+      <ion-label>
+        <h2>{{ job.name }}</h2>
+        <p>{{ job.company }}</p>
+        <p>{{ getJobLevels(job) }}</p>
+        <p>{{ job.status }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="editJob(job)" fill="outline">Edit
+          <!-- <ion-icon name="create"></ion-icon> -->
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>

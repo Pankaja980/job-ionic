@@ -14,16 +14,31 @@ export class JobService {
 
   getJobLevels(): Observable<string[]> {
     // return this.http.get<string[]>(`${this.baseUrl}/levels`);
-    return this.getJobs().pipe(
-      map(
-        (jobs: Job[]) => [
-          ...new Set(
-            jobs.flatMap((job) => job.levels.map((level) => level.name))
-          ),
-        ] // Extract unique levels
-      )
+    // return this.getJobs().pipe(
+    //   map(
+    //     (jobs: Job[]) => [
+    //       ...new Set(
+    //         jobs.flatMap((job) => job.levels.map((level) => level.name))
+    //       ),
+    //     ] // Extract unique levels
+    //   )
+    // );
+    return this.http.get<any>(this.baseUrl).pipe(
+      map(response => {
+        // Extract levels from each job if available
+        const allLevels = response.jobs.reduce((acc: string[], job: any) => {
+          if (job.levels && Array.isArray(job.levels)) {
+            acc.push(...job.levels);
+          }
+          return acc;
+        }, []);
+        // Return only the unique levels
+        return Array.from(new Set(allLevels));
+      })
     );
   }
+
+  
 
   getJobs(): Observable<Job[]> {
     // return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
