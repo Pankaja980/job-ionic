@@ -1,3 +1,73 @@
-<p>
-  job-form-component works!
-</p>
+<ion-modal [isOpen]="displayDialog" (ionModalDidDismiss)="onCancel()">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{ job ? 'Edit Job' : 'Add Job' }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="onCancel()">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <form *ngIf="jobForm" [formGroup]="jobForm"  (ngSubmit)="onSubmit()">
+      <!-- Job Title -->
+      <ion-item>
+        <ion-label position="stacked">Job Title</ion-label>
+        <ion-input formControlName="title" ></ion-input>
+      </ion-item>
+      <!-- <ion-text color="danger" *ngIf="jobForm.controls.title.invalid && jobForm.controls.title.touched">
+        Job title is required
+      </ion-text> -->
+
+      <!-- Company Name -->
+      <ion-item>
+        <ion-label position="stacked">Company</ion-label>
+        <ion-input formControlName="company" required></ion-input>
+      </ion-item>
+      <!-- <ion-text color="danger" *ngIf="jobForm.controls.company.invalid && jobForm.controls.company.touched">
+        Company name is required
+      </ion-text> -->
+
+      <!-- Job Level Dropdown -->
+      <ion-item>
+        <ion-label position="stacked">Job Level</ion-label>
+        <ion-select formControlName="level">
+          <ion-select-option *ngFor="let level of jobLevels" [value]="level">
+            {{ level }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Job Status Dropdown -->
+      <ion-item>
+        <ion-label position="stacked">Status</ion-label>
+        <ion-select formControlName="status">
+          <ion-select-option *ngFor="let status of jobStatuses" [value]="status">
+            {{ status }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Action Buttons -->
+      <!-- <div class="form-buttons"> -->
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+        <ion-button type="submit" [disabled]="jobForm.invalid" color="primary">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Save Job
+        </ion-button>
+        <ion-button type="button" color="medium" (click)="onCancel()">
+          <ion-icon slot="start" name="close-outline"></ion-icon>
+          Cancel
+        </ion-button>
+     
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+    </form>
+  </ion-content>
+</ion-modal>
+

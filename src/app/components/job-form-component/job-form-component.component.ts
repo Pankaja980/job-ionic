@@ -6,7 +6,9 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormGroup,
   FormBuilder,
@@ -15,6 +17,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { Job } from '../../models/job';
+import {IonicModule} from '@ionic/angular';
 // import { DropdownModule } from 'primeng/dropdown';
 // import { CommonModule } from '@angular/common';
 // import { ButtonModule } from 'primeng/button';
@@ -30,10 +33,11 @@ import { Job } from '../../models/job';
   imports: [
    // DropdownModule,
     FormsModule,
-    // CommonModule,
+    CommonModule,
     // ButtonModule,
     // DialogModule,
     ReactiveFormsModule,
+    IonicModule,
     // InputTextModule,
     // IftaLabelModule
   ], // Ensure proper module imports
@@ -69,25 +73,26 @@ export class JobFormComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    
     this.initializeForm();
   }
   
-  ngOnChanges(): void {
-    // if (changes['job'] && this.job) {
-    //   this.initializeForm(); // Reinitialize form when input changes
-    // }
-    if (this.jobForm) {
-      if (this.job) {
-        this.jobForm.patchValue({
-          title: this.job.name,
-          company: this.job.company.name,
-          level: this.job.levels[0]?.name || '',
-          status: this.job.status,
-        });
-      } else {
-        this.jobForm.reset();
-      }
+  ngOnChanges(changes:SimpleChanges): void {
+    if (changes['job'] && this.job) {
+      this.initializeForm(); // Reinitialize form when input changes
     }
+    // if (this.jobForm) {
+    //   if (this.job) {
+    //     this.jobForm.patchValue({
+    //       title: this.job.name ||'',
+    //       company: this.job.company.name || '',
+    //       level: this.job.levels[0]?.name || '',
+    //       status: this.job.status || '',
+    //     });
+    //   } else {
+    //     this.jobForm.reset();
+    //   }
+    // }
   }
 
   @HostListener('document:keydown.escape', ['$event'])
@@ -129,7 +134,7 @@ export class JobFormComponent implements OnInit {
         levels: [{ name: this.jobForm.value.level }],
         status: this.jobForm.value.status,
       };
-      console.log(jobData);
+      console.log('Saving job',jobData);
       this.saveJob.emit(jobData);
       this.displayDialog = false;
     }
