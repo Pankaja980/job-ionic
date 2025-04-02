@@ -46,7 +46,7 @@ export class JobCategorySelectorComponent implements OnInit {
 
   @Output() selectedCategoryChange = new EventEmitter<string>();
   @Output() filteredJobsChange = new EventEmitter<Job[]>(); 
-
+  @Output() levelSelected = new EventEmitter<string>();
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -81,16 +81,17 @@ export class JobCategorySelectorComponent implements OnInit {
   //   this.selectedCategoryChange.emit(category);
   //   this.filteredJobs$.subscribe(filteredJobs => this.filteredJobsChange.emit(filteredJobs));
   // }
-  onCategoryChange(selectedValue: string): void {
-    this.selectedCategorySubject.next(selectedValue);
-    this.selectedCategoryChange.emit(selectedValue);
-    this.filteredJobs$.subscribe(filteredJobs => this.filteredJobsChange.emit(filteredJobs));
+  onCategoryChange(level: string): void {
+    // this.selectedCategorySubject.next(selectedValue);
+    // this.selectedCategoryChange.emit(selectedValue);
+    // this.filteredJobs$.subscribe(filteredJobs => this.filteredJobsChange.emit(filteredJobs));
+    this.levelSelected.emit(level);
   }
   
-  toggleDropdown(): void {
-    const selectElement = document.getElementById('levelSelect') as HTMLSelectElement;
-    selectElement?.focus(); // Opens the dropdown when clicked
-  }
+  // toggleDropdown(): void {
+  //   const selectElement = document.getElementById('levelSelect') as HTMLSelectElement;
+  //   selectElement?.focus(); // Opens the dropdown when clicked
+  // }
   
 }
 

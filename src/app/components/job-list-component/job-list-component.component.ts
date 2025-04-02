@@ -14,6 +14,7 @@ import { selectJobs ,selectJobStatusCounts} from '../../store/selector';
 import{ IonicModule } from '@ionic/angular';
 import { IonSearchbar, IonList, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular';
 import { JobFormComponent } from '../job-form-component/job-form-component.component';
+import { AlertController } from '@ionic/angular';
 // import { ButtonModule } from 'primeng/button';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // import { DropdownModule } from 'primeng/dropdown';
@@ -67,7 +68,7 @@ import { JobService } from 'src/app/services/job.service';
   styleUrls: ['./job-list-component.component.scss'],
 })
 export class JobListComponent implements OnInit {
-  jobs$: Observable<Job[]>;
+  jobs$!: Observable<Job[]>;
   filteredJobs$: Observable<Job[]> = new Observable();
 
   selectedLevelSubject = new BehaviorSubject<string>('');
@@ -135,6 +136,7 @@ export class JobListComponent implements OnInit {
     // private confirmationService: ConfirmationService,
     private cdr: ChangeDetectorRef ,//to trigger change detection and the view is updated.
    // private tooltip: Tooltip
+   private alertController: AlertController
   ) {
     this.jobs$ = this.store.select(selectJobs);
     
@@ -143,19 +145,27 @@ export class JobListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(JobActions.loadJobs());
-
-    this.jobs$.subscribe((jobs) => this.updateChart(jobs)); // Updates chart only when job list changes
+    this.jobs$ = this.store.select(selectJobs);
+    this.jobs$.subscribe(jobs => {
+      console.log('Jobs available for filtering:', jobs);
+    });
+   // this.jobs$.subscribe((jobs) => this.updateChart(jobs)); // Updates chart only when job list changes
+   this.jobs$.subscribe(jobs => console.log('Jobs from store:', jobs));
+   this.jobs$ = this.jobService.getJobs();
     this.filteredJobs$ = this.jobs$;
-    this.applyFilters();
+   // this.applyFilters();
     this.jobForm = new FormGroup({
       title: new FormControl('', Validators.required),
       company: new FormControl('', Validators.required),
       jobLevel: new FormControl('', Validators.required),
       jobStatus: new FormControl('', Validators.required),
     });
-    this.store.select(selectJobStatusCounts).subscribe(statusCounts => {
-      if (!statusCounts) return;
-
+    // this.store.select(selectJobStatusCounts).subscribe(statusCounts => {
+    //   if (!statusCounts) return;
+    // this.store.select(selectJobs).subscribe(jobs => {
+    //   console.log('Jobs from store:', jobs); // Log jobs received
+    //   this.jobs = jobs; // Assign jobs to component variable
+    // });
      
 
     //   this.chartData = {
@@ -169,8 +179,8 @@ export class JobListComponent implements OnInit {
       
       
       
-    });
-  }
+    };
+  
   
   
   
@@ -212,17 +222,26 @@ export class JobListComponent implements OnInit {
   // }
   applyFilters(): void {
     this.filteredJobs$ = this.jobs$.pipe(
-      map((jobs) => {
-        return jobs.filter(
-          (job) =>
-            (this.selectedLevelSubject.value
-              ? job.levels.some(
-                  (l) => l.name === this.selectedLevelSubject.value
-                )
-              : true) &&
-            (this.selectedStatus ? job.status === this.selectedStatus : true)
-        );
-      })
+      // map((jobs) => {
+      //   return jobs.filter(
+      //     (job) =>
+      //       (this.selectedLevelSubject.value
+      //         ? job.levels.some(
+      //             (l) => l.name === this.selectedLevelSubject.value
+      //           )
+      //         : true) ;
+      //       (this.selectedStatus ? job.status === this.selectedStatus : true)
+      //   );
+      // })
+      map((jobs) =>
+        jobs.filter((job) => {
+          const levelMatch = this.selectedLevelSubject.value
+            ? job.levels && job.levels.some((l) => l.name === this.selectedLevelSubject.value)
+            : true;
+          const statusMatch = this.selectedStatus ? job.status === this.selectedStatus : true;
+          return levelMatch && statusMatch;
+        })
+      )
     );
   }
   // filterJobs() {
@@ -277,6 +296,8 @@ export class JobListComponent implements OnInit {
   }
 
   onLevelChange(level: string): void {
+    // const target = event.target as HTMLSelectElement; // Type assertion
+    // const level = target?.value ?? ''; // Provide a fallback value
     this.selectedLevelSubject.next(level);
     this.applyFilters();
   }
@@ -446,7 +467,31 @@ export class JobListComponent implements OnInit {
     this.jobForm.reset(); // Reset form
   }
  
-  
+  async confirmDelete(jobId: string): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this job?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.deleteJob(jobId);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  deleteJob(jobId: string): void {
+    // Implement the actual delete logic here
+    console.log(`Job with ID ${jobId} deleted.`);
+  }
 
 
 }

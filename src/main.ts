@@ -6,6 +6,8 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { jobReducer } from './app/store/reducer';
 import { provideHttpClient } from '@angular/common/http';
+import { provideEffects } from '@ngrx/effects';
+import { JobEffects } from './app/store/effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -13,6 +15,7 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideStore({ job: jobReducer }),
-    provideHttpClient()
+    provideHttpClient(),
+    provideEffects(JobEffects),
   ],
 });

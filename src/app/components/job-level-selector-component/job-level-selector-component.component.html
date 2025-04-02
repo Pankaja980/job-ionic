@@ -1,8 +1,8 @@
-<!-- <ion-item>
-  <ion-label>Filter by Level</ion-label>
-  <ion-select [value]="selectedCategory" (ionChange)="onCategoryChange($event.value)">
-    <ion-select-option *ngFor="let level of jobLevels$" [value]="level">
-      {{ level }}
+<ion-item>
+  <!-- <ion-label>Filter by Level</ion-label> -->
+  <ion-select [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange($event.detail.value)" placeholder="Filter by Level">
+    <ion-select-option *ngFor="let level of (jobLevels$ | async)" [value]="level.value">
+      {{ level.label}}
     </ion-select-option>
   </ion-select>
-</ion-item> -->
+</ion-item>

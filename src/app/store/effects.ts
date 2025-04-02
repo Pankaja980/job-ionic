@@ -33,8 +33,10 @@ export class JobEffects {
   loadJobs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(JobActions.loadJobs),
+      tap(() => console.log('loadJobs action dispatched!')), 
       mergeMap(() =>
         this.jobService.getJobs().pipe(
+          tap(jobs => console.log('Fetched jobs from API:', jobs)),
           map((jobs:Job[]) => JobActions.loadJobsSuccess({ jobs })),
           catchError(() => of({ type: '[Job] Load Jobs Failed' }))
         )

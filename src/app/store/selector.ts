@@ -13,7 +13,7 @@ export const selectJobLevels = createSelector(
 
 export const selectJobs = createSelector(
   selectJobState,
-  (state:JobState) => state?.jobs || []
+  (state) => state?.jobs || []
 );
 export const selectJobStatusCounts = createSelector(
   selectJobs,
