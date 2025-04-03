@@ -55,8 +55,9 @@ export class JobService {
     //   map(response => response.results) // Extract jobs from API response
     // );
     const savedJobs = localStorage.getItem(this.localStorageKey);
-    if (savedJobs) {
-      const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+    const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+    if (jobs.length >0) {
+      //const jobs = savedJobs ? JSON.parse(savedJobs) : [];
       console.log('Jobs from local storage:', jobs);
       return of(jobs);
       

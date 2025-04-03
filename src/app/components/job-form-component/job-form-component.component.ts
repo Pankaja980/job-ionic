@@ -55,7 +55,7 @@ export class JobFormComponent implements OnInit {
   statusOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed status options
   // selectedJobLevel: string = '';
   // selectedJobStatus: string = '';
-  jobLevels = ['Entry Level', 'Mid Level', 'Senior Level'];
+  jobLevels = ['Internship', 'Mid Level', 'Senior Level'];
   jobStatuses: string[] = [
     'Applied',
     'Interview Scheduled',
