@@ -1,4 +1,4 @@
-import { ActionReducerMap, createReducer, on } from '@ngrx/store';
+import {  createReducer, on } from '@ngrx/store';
 import * as JobActions from './actions';
 import { Job } from '../models/job';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Store,select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 //import { TableModule } from 'primeng/table';
@@ -130,7 +130,7 @@ export class JobListComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private jobService: JobService,
+    //private jobService: JobService,
     private formBuilder: FormBuilder,
     // private messageService: MessageService,
     // private confirmationService: ConfirmationService,
@@ -145,15 +145,20 @@ export class JobListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(JobActions.loadJobs());
-    this.jobs$ = this.store.select(selectJobs);
-    this.jobs$.subscribe(jobs => {
-      console.log('Jobs available for filtering:', jobs);
-    });
+    //this.jobs$ = this.store.select(selectJobs);
+    // this.jobs$.subscribe(jobs => {
+    //   console.log('Jobs available for filtering:', jobs);
+    // });
+    // this.store.select(selectJobs).subscribe(() => {
+    //   this.cdr.detectChanges(); // ✅ Force refresh UI
+    // });
+
+    
    // this.jobs$.subscribe((jobs) => this.updateChart(jobs)); // Updates chart only when job list changes
-   this.jobs$.subscribe(jobs => console.log('Jobs from store:', jobs));
-   this.jobs$ = this.jobService.getJobs();
+  // this.jobs$.subscribe(jobs => console.log('Jobs from store:', jobs));
+   //this.jobs$ = this.jobService.getJobs();
     this.filteredJobs$ = this.jobs$;
-   // this.applyFilters();
+    this.applyFilters();
     this.jobForm = new FormGroup({
       title: new FormControl('', Validators.required),
       company: new FormControl('', Validators.required),
@@ -222,27 +227,27 @@ export class JobListComponent implements OnInit {
   // }
   applyFilters(): void {
     this.filteredJobs$ = this.jobs$.pipe(
-      // map((jobs) => {
-      //   return jobs.filter(
-      //     (job) =>
-      //       (this.selectedLevelSubject.value
-      //         ? job.levels.some(
-      //             (l) => l.name === this.selectedLevelSubject.value
-      //           )
-      //         : true) ;
-      //       (this.selectedStatus ? job.status === this.selectedStatus : true)
-      //   );
-      // })
-      map((jobs) =>
-        jobs.filter((job) => {
-          const levelMatch = this.selectedLevelSubject.value
-            ? job.levels && job.levels.some((l) => l.name === this.selectedLevelSubject.value)
-            : true;
-          const statusMatch = this.selectedStatus ? job.status === this.selectedStatus : true;
-          return levelMatch && statusMatch;
-        })
-      )
-    );
+      map((jobs) => {
+        return jobs.filter(
+          (job) =>
+            (this.selectedLevelSubject.value
+              ? job.levels.some(
+                  (l) => l.name === this.selectedLevelSubject.value
+                )
+              : true) &&
+            (this.selectedStatus ? job.status === this.selectedStatus : true)
+        );
+      })
+    //   map((jobs) =>
+    //     jobs.filter((job) => {
+    //       const levelMatch = this.selectedLevelSubject.value
+    //         ? job.levels && job.levels.some((l) => l.name === this.selectedLevelSubject.value)
+    //         : true;
+    //       const statusMatch = this.selectedStatus ? job.status === this.selectedStatus : true;
+    //       return levelMatch && statusMatch;
+    //     })
+    //   )
+     );
   }
   // filterJobs() {
   //   this.filteredJobs$ = this.jobs$.filter(job =>
@@ -416,10 +421,60 @@ export class JobListComponent implements OnInit {
     // });
     // this.displayDialog = true;
   //}
-
+  private getExistingJobs(): Job[] {
+    return JSON.parse(localStorage.getItem('jobs') || '[]');
+  }
+  
+  private getUpdatedJobsList(updatedJob: Job): Job[] {
+    return this.getExistingJobs().map(job =>
+      job.id === updatedJob.id ? updatedJob : job
+    );
+  }
 
 
   onJobSave(job: Job): void {
+    if (this.isEditMode && this.editingJobId) {
+      const updatedJob = { ...job, id: this.editingJobId };
+  
+      // Dispatch updateJob
+      this.store.dispatch(JobActions.updateJob({ job: updatedJob }));
+  
+      // Immediately reflect changes in the UI by dispatching updateJobSuccess
+      //this.store.dispatch(JobActions.updateJobSuccess({ job: updatedJob }));
+  
+      // Update localStorage for persistence
+      // const updatedJobs = this.getUpdatedJobsList(updatedJob);
+      // localStorage.setItem('jobs', JSON.stringify(updatedJobs));
+    } else {
+      const newJob = { ...job, id: Math.floor(Math.random() * 10000) };
+  
+      // Dispatch addJob
+      this.store.dispatch(JobActions.addJob({ job: newJob }));
+  
+      // Immediately update the UI
+      //this.store.dispatch(JobActions.addJobSuccess({ job: newJob }));
+  
+      // Save to localStorage
+      // const updatedJobs = [...this.getExistingJobs(), newJob];
+      // localStorage.setItem('jobs', JSON.stringify(updatedJobs));
+    }
+  
+    // Reset edit mode and close the dialog
+    this.isEditMode = false;
+    this.editingJobId = null;
+    this.displayDialog = false;
+  
+    // Reset the form
+    this.jobForm.reset({
+      title: '',
+      company: '',
+      jobLevel: '',
+      jobStatus: 'Applied',
+    });
+  
+    // Ensure UI updates instantly
+    this.cdr.detectChanges();
+  }
     //   if (job.id) {
     //     this.store.dispatch(JobActions.updateJob({ job }));
     //     this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Job updated successfully' });
@@ -429,39 +484,39 @@ export class JobListComponent implements OnInit {
     //   }
     //   this.displayDialog = false;
     // }
-    if (this.isEditMode && this.editingJobId) {
-      this.store.dispatch(
-        JobActions.updateJob({ job: { ...job, id: this.editingJobId } })
-      );
+    // if (this.isEditMode && this.editingJobId) {
+    //   this.store.dispatch(
+    //     JobActions.updateJob({ job: { ...job, id: this.editingJobId } })
+    //   );
     //   this.messageService.add({
     //     severity: 'success',
     //     summary: 'Updated',
     //     detail: 'Job updated successfully',
     //   });
-    } else {
-      this.store.dispatch(
-        JobActions.addJob({
-          job: { ...job, id: Math.floor(Math.random() * 10000) },
+    // } else {
+    //   this.store.dispatch(
+    //     JobActions.addJob({
+    //       job: { ...job, id: Math.floor(Math.random() * 10000) },
           
-        })
-      );
+    //     })
+    //   );
     //   this.messageService.add({
     //     severity: 'success',
     //     summary: 'Added',
     //     detail: 'Job added successfully',
     //   });
-    }
-    this.isEditMode = false; // Reset edit mode
-    this.editingJobId = null;
-    this.displayDialog = false;
-    this.jobForm.reset({
-      title: '',
-      company: '',
-      jobLevel: '',
-      jobStatus: 'Applied', // Set a default value if needed
-    });
-    this.cdr.detectChanges();
-  }
+  //  }
+  //   this.isEditMode = false; // Reset edit mode
+  //   this.editingJobId = null;
+  //   this.displayDialog = false;
+  //   this.jobForm.reset({
+  //     title: '',
+  //     company: '',
+  //     jobLevel: '',
+  //     jobStatus: 'Applied', // Set a default value if needed
+  //   });
+  //   this.cdr.detectChanges();
+  // }
   onCancel(): void {
     this.displayDialog = false; // Close dialog
     this.jobForm.reset(); // Reset form
@@ -490,7 +545,8 @@ export class JobListComponent implements OnInit {
 
   deleteJob(jobId: string): void {
     // Implement the actual delete logic here
-    console.log(`Job with ID ${jobId} deleted.`);
+    this.store.dispatch(JobActions.deleteJob({ id:+jobId }));
+    //console.log(`Job with ID ${jobId} deleted.`);
   }
 
 

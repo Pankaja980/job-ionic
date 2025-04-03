@@ -78,21 +78,21 @@ export class JobFormComponent implements OnInit {
   }
   
   ngOnChanges(changes:SimpleChanges): void {
-    if (changes['job'] && this.job) {
-      this.initializeForm(); // Reinitialize form when input changes
-    }
-    // if (this.jobForm) {
-    //   if (this.job) {
-    //     this.jobForm.patchValue({
-    //       title: this.job.name ||'',
-    //       company: this.job.company.name || '',
-    //       level: this.job.levels[0]?.name || '',
-    //       status: this.job.status || '',
-    //     });
-    //   } else {
-    //     this.jobForm.reset();
-    //   }
+    // if (changes['job'] && this.job) {
+    //   this.initializeForm(); // Reinitialize form when input changes
     // }
+    if (this.jobForm) {
+      if (this.job) {
+        this.jobForm.patchValue({
+          title: this.job.name ||'',
+          company: this.job.company.name || '',
+          level: this.job.levels[0]?.name || '',
+          status: this.job.status || '',
+        });
+      } else {
+        this.jobForm.reset();
+      }
+    }
   }
 
   @HostListener('document:keydown.escape', ['$event'])
