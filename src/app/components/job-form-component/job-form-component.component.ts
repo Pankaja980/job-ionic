@@ -55,7 +55,7 @@ export class JobFormComponent implements OnInit {
   statusOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed status options
   // selectedJobLevel: string = '';
   // selectedJobStatus: string = '';
-  jobLevels = ['Internship', 'Mid Level', 'Senior Level'];
+  jobLevels = ['Internship','Entry Level', 'Mid Level', 'Senior Level'];
   jobStatuses: string[] = [
     'Applied',
     'Interview Scheduled',
@@ -77,7 +77,7 @@ export class JobFormComponent implements OnInit {
     this.initializeForm();
   }
   
-  ngOnChanges(changes:SimpleChanges): void {
+  ngOnChanges(): void {
     // if (changes['job'] && this.job) {
     //   this.initializeForm(); // Reinitialize form when input changes
     // }

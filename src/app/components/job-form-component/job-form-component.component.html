@@ -33,7 +33,7 @@
       <!-- Job Level Dropdown -->
       <ion-item>
         <ion-label position="stacked">Job Level</ion-label>
-        <ion-select formControlName="level">
+        <ion-select formControlName="level" placeholder="Select Job Level">
           <ion-select-option *ngFor="let level of jobLevels" [value]="level">
             {{ level }}
           </ion-select-option>
@@ -43,7 +43,7 @@
       <!-- Job Status Dropdown -->
       <ion-item>
         <ion-label position="stacked">Status</ion-label>
-        <ion-select formControlName="status">
+        <ion-select formControlName="status" placeholder="Select Job Status">
           <ion-select-option *ngFor="let status of jobStatuses" [value]="status">
             {{ status }}
           </ion-select-option>

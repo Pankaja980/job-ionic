@@ -29,6 +29,7 @@
     "@ionic/angular": "^8.0.0",
     "@ngrx/effects": "^19.0.1",
     "@ngrx/store": "^19.0.1",
+    "chart.js": "^4.4.8",
     "ionicons": "^7.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

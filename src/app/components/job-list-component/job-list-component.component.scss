@@ -1,4 +1,50 @@
-ion-button {
-    display: inline-block !important; /* Ensure buttons are visible */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+
+  ion-title {
+    flex-grow: 1;
   }
+
+  ion-searchbar {
+    flex: 2;
+    min-width: 250px;
+  }
+
+  app-job-level-selector-component, ion-select {
+    flex: 1;
+    min-width: 150px;
+   
+  }
+
+  ion-buttons {
+    display: flex;
+    align-items: center;
+
+    ion-button {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+    }
+  }
+}
+.charts-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+.chart {
+  width: 45%;
+  min-width: 300px;
+  text-align: center;
+}
+canvas {
+  max-width: 100%;
+  height: auto;
+}
   

@@ -1,104 +1,34 @@
-<!-- job-list-component.component.html -->
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>Job List</ion-title>
-    <ion-buttons slot="end">
-      <ion-fab-button (click)="addJob()"  color="primary">
-        <ion-icon name="add-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
-  <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
-  <div class="filters">
-  <app-job-level-selector-component
-  
-  (levelSelected)="onLevelChange($event)"
-></app-job-level-selector-component>
- [selectedCategory]="selectedCategory" -->
-<!-- <ion-select [(ngModel)]="selectedStatus" (ionChange)="applyFilters()" placeholder="Filter by Status">
-  <ion-select-option *ngFor="let status of jobStatusOptions" [value]="status.value">
-    {{ status.label }}
-  </ion-select-option>
-  </ion-select>
-  </div>
- 
-  <ion-list> -->
-    <!-- <ion-grid>
-      <ion-row>
-        <ion-col>Title</ion-col>
-        <ion-col>Company</ion-col>
-        <ion-col>Level</ion-col>
-        <ion-col>Status</ion-col>
-        <ion-col>Action</ion-col>
-      </ion-row>
-    </ion-grid> -->
-    <!-- <ng-container *ngIf="(filteredJobs$ | async) as jobs">
-      <ion-item *ngIf="jobs.length === 0">
-        <ion-label>No jobs found.</ion-label>
-      </ion-item>
-      <ion-item *ngFor="let job of filteredJobs$ | async">
-      <ion-label>
-        <h2>{{ job.name }}</h2>
-        <p>{{ job.company.name }}</p>
-        <p>Level:{{ getJobLevels(job) }}</p>
-        <p>Status:{{ job.status || 'Applied' }}</p>
-      </ion-label>
-      <ion-buttons slot="end">
-        <ion-button (click)="editJob(job)" fill="outline">
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
-        <ion-button  (click)="confirmDelete(job.id.toString())" fill="outline" color="danger">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-    </ng-container>
-  </ion-list> --> 
-  <!-- <app-job-form *ngIf="displayDialog" 
-                [job]="selectedJob" 
-                (jobSaved)="onJobSave($event)" 
-                (cancel)="onCancel()">
-  </app-job-form> -->
   <!-- job-list-component.component.html -->
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Job List</ion-title>
-    <ion-buttons slot="end">
-      <ion-fab-button (click)="addJob()"  color="primary">
-        <ion-icon name="add-outline"></ion-icon>
-      </ion-fab-button>
+  <ion-toolbar color="primary">
+    <div class="header-container">
+    <ion-title><h1>Job Tracker</h1></ion-title>
+    
+      <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
+
+    <app-job-level-selector-component
+  
+    (levelSelected)="onLevelChange($event)"
+  ></app-job-level-selector-component>
+
+    <ion-buttons>
+      <ion-button (click)="addJob()" >
+        <ion-icon name="add-outline"></ion-icon> Add Job
+      </ion-button>
     </ion-buttons>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
-  <div class="filters">
-  <app-job-level-selector-component
   
-  (levelSelected)="onLevelChange($event)"
-></app-job-level-selector-component>
-<!-- [selectedCategory]="selectedCategory" -->
-<ion-select [(ngModel)]="selectedStatus" (ionChange)="applyFilters()" placeholder="Filter by Status">
-  <ion-select-option *ngFor="let status of jobStatusOptions" [value]="status.value">
-    {{ status.label }}
-  </ion-select-option>
-  </ion-select>
-  </div>
+   
+  <ion-col size="12">
+ 
  
   <ion-list>
-    <!-- <ion-grid>
-      <ion-row>
-        <ion-col>Title</ion-col>
-        <ion-col>Company</ion-col>
-        <ion-col>Level</ion-col>
-        <ion-col>Status</ion-col>
-        <ion-col>Action</ion-col>
-      </ion-row>
-    </ion-grid> -->
+   
     <ng-container *ngIf="(filteredJobs$ | async) as jobs">
       <ion-item *ngIf="jobs.length === 0">
         <ion-label>No jobs found.</ion-label>
@@ -121,15 +51,23 @@
     </ion-item>
     </ng-container>
   </ion-list>
-  <!-- <app-job-form *ngIf="displayDialog" 
-                [job]="selectedJob" 
-                (jobSaved)="onJobSave($event)" 
-                (cancel)="onCancel()">
-  </app-job-form> -->
+
   <app-job-form-component
   [job]="selectedJob"
   [displayDialog]="displayDialog"
   (saveJob)="onJobSave($event)"
   (cancel)="onCancel()">
 </app-job-form-component>
+</ion-col>
+
+
+  <div class="chart-container">
+    <canvas #barChartCanvas></canvas>
+  </div>
+  <div class="chart-container">
+    <h3 align="center">Job Status</h3>
+    <canvas #doughnutChartCanvas></canvas>
+  </div>
+
+
 </ion-content>
