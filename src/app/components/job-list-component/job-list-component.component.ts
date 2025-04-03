@@ -160,6 +160,11 @@ console.log('Final Data:', data);
         console.warn('Bar chart data is empty.');
       }
     }
+    displayLimit = 10; // Initially show only 10 jobs
+
+increaseLimit() {
+  this.displayLimit += 10; // Load 10 more jobs when clicked
+}
   onSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.searchText = inputElement.value.toLowerCase();
