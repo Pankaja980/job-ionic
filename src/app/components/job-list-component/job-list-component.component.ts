@@ -89,7 +89,7 @@ export class JobListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.store.dispatch(JobActions.loadJobs());
-    this.jobs$.subscribe((jobs) => this.updateChart(jobs));
+   // this.jobs$.subscribe((jobs) => this.updateChart(jobs));
     this.filteredJobs$ = this.jobs$;
     this.applyFilters();
     this.jobForm = new FormGroup({
@@ -107,6 +107,10 @@ export class JobListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
       this.createBarChart();
       this.createDoughnutChart();
+
+      this.jobs$.subscribe((jobs) => {
+        this.updateChart(jobs);
+      });
     }
     createBarChart(): void {
       this.barChart = new Chart(this.barChartCanvas.nativeElement, {
@@ -129,27 +133,27 @@ export class JobListComponent implements OnInit, AfterViewInit {
         options: { responsive: true, maintainAspectRatio: false },
       });
     }
-    updateChart(jobs: Job[]): void {
-      if (!jobs || jobs.length === 0) return; 
-      const levelCounts: { [key: string]: number } = {};
-      jobs.forEach((job) => {
-        job.levels.forEach((level) => {
-          levelCounts[level.name] = (levelCounts[level.name] || 0) + 1;
-        });
-      });
-      console.log('Job level counts:', levelCounts);
-      const labels = Object.keys(levelCounts);
-      const data = Object.values(levelCounts);
+//     updateChart(jobs: Job[]): void {
+//       if (!jobs || jobs.length === 0) return; 
+//       const levelCounts: { [key: string]: number } = {};
+//       jobs.forEach((job) => {
+//         job.levels.forEach((level) => {
+//           levelCounts[level.name] = (levelCounts[level.name] || 0) + 1;
+//         });
+//       });
+//       console.log('Job level counts:', levelCounts);
+//       const labels = Object.keys(levelCounts);
+//       const data = Object.values(levelCounts);
       
-console.log('Final Labels:', labels);  // Should NOT be empty
-console.log('Final Data:', data);   
-      if (this.barChart && labels.length > 0 && data.length > 0) {
-        this.barChart.destroy();
-        this.barChart.data.labels = labels;
-        this.barChart.data.datasets[0].data = data;
-        this.barChart.update();
-      }
-    }
+// console.log('Final Labels:', labels);  // Should NOT be empty
+// console.log('Final Data:', data);   
+//       if (this.barChart && labels.length > 0 && data.length > 0) {
+//         this.barChart.destroy();
+//         this.barChart.data.labels = labels;
+//         this.barChart.data.datasets[0].data = data;
+//         this.barChart.update();
+//       }
+//     }
     updateDoughnutChart(statusCounts: { [key: string]: number }): void {
       if (this.doughnutChart) {
         this.doughnutChart.data.labels = Object.keys(statusCounts);
@@ -228,6 +232,42 @@ increaseLimit() {
 //       ],
 //     };
 // }
+updateChart(jobs: Job[]): void {
+  if (!jobs || jobs.length === 0) return;
+
+  const levelCounts: { [key: string]: number } = {};
+  jobs.forEach((job) => {
+    job.levels.forEach((level) => {
+      levelCounts[level.name] = (levelCounts[level.name] || 0) + 1;
+    });
+  });
+
+  const labels = Object.keys(levelCounts);
+  const data = Object.values(levelCounts);
+
+  if (!this.barChart) {
+    this.barChart = new Chart(this.barChartCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Job Levels',
+          data,
+          backgroundColor: ['#3498db', '#f39c12', '#2ecc71', '#9b59b6'],
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
+  } else {
+    this.barChart.data.labels = labels;
+    this.barChart.data.datasets[0].data = data;
+    this.barChart.update();
+  }
+}
+
 
   getJobLevels(job: Job): string {
     return job.levels?.map((level) => level.name).join(', ') || 'N/A';
