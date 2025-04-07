@@ -21,7 +21,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content [fullscreen]="true" class="ion-padding" >
   
    
   <ion-col size="12">
@@ -33,12 +33,13 @@
       <ion-item *ngIf="jobs.length === 0">
         <ion-label>No jobs found.</ion-label>
       </ion-item>
-      <ion-item *ngFor="let job of filteredJobs$ | async">
+      
+      <ion-item *ngFor="let job of filteredJobs$ | async; trackBy: trackByJobId">
       <ion-label>
         <h2>{{ job.name }}</h2>
         <p>{{ job.company.name }}</p>
         <p>Level:{{ getJobLevels(job) }}</p>
-        <p>Status:{{ job.status || 'Applied' }}</p>
+        <p>Status:{{ job?.status || 'Applied' }}</p>
       </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="editJob(job)" fill="outline">
@@ -62,13 +63,14 @@
 
 
   <div class="chart-container">
-    
+    <div class="chart">
     <canvas #barChartCanvas></canvas>
   </div>
-  <div class="chart-container">
+  <!-- </div> -->
+  <!-- <div class="chart-container"> -->
+  <div class="chart">
     <h3 style="text-align: center;">Job Status</h3>
     <canvas #doughnutChartCanvas></canvas>
   </div>
-
-
+  </div>
 </ion-content>

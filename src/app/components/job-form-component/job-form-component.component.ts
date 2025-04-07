@@ -77,20 +77,27 @@ export class JobFormComponent implements OnInit {
     this.initializeForm();
   }
   
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     // if (changes['job'] && this.job) {
     //   this.initializeForm(); // Reinitialize form when input changes
     // }
-    if (this.jobForm) {
-      if (this.job) {
+    if (changes['job'] && this.jobForm) {
+      const updatedJob = changes['job'].currentValue as Job;
+
+      if (updatedJob) {
         this.jobForm.patchValue({
-          title: this.job.name ||'',
-          company: this.job.company.name || '',
-          level: this.job.levels[0]?.name || '',
-          status: this.job.status || '',
+          title: updatedJob.name ||'',
+          company: updatedJob.company.name || '',
+          level: updatedJob.levels[0]?.name || '',
+          status: updatedJob.status || 'Applied',
         });
       } else {
-        this.jobForm.reset();
+        this.jobForm.reset({
+          title: '',
+          company: '',
+          level: '',
+          status: 'Applied',
+        });
       }
     }
   }
@@ -109,7 +116,7 @@ export class JobFormComponent implements OnInit {
       title: [this.job?.name || '', Validators.required],
       company: [this.job?.company?.name || '', Validators.required],
       level: [this.job?.levels?.[0]?.name || '', Validators.required],
-      status: [this.job?.status || '', Validators.required],
+      status: [this.job?.status || 'Applied', Validators.required],
     });
   }
 

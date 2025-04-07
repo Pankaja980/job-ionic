@@ -8,7 +8,7 @@ import { Job } from '../models/job';
 })
 export class JobService {
   private readonly baseUrl = 'https://www.themuse.com/api/public/jobs';
-  private readonly localStorageKey = 'jobs';
+  public readonly localStorageKey = 'jobs';
 
   constructor(private http: HttpClient) {}
 
@@ -47,30 +47,39 @@ export class JobService {
       })
     );
   }
-
+  getJobs(): Observable<Job[]> {
+    return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
+      map((response) => response.results),
+      catchError((error) => {
+        console.error('Error fetching jobs:', error);
+        return of([]); // Return empty array if API call fails
+      })
+    );
+  }
+  
   
 
-  getJobs(): Observable<Job[]> {
-    // return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
-    //   map(response => response.results) // Extract jobs from API response
-    // );
-    const savedJobs = localStorage.getItem(this.localStorageKey);
-    const jobs = savedJobs ? JSON.parse(savedJobs) : [];
-    if (jobs.length >0) {
-      //const jobs = savedJobs ? JSON.parse(savedJobs) : [];
-      console.log('Jobs from local storage:', jobs);
-      return of(jobs);
+  // getJobs(): Observable<Job[]> {
+  //   // return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
+  //   //   map(response => response.results) // Extract jobs from API response
+  //   // );
+  //   const savedJobs = localStorage.getItem(this.localStorageKey);
+  //   const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+  //   if (jobs.length >0) {
+  //     //const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+  //     console.log('Jobs from local storage:', jobs);
+  //     return of(jobs);
       
-    } else {
-      return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
-        map((response) => {
-          const jobs = response.results;
-          localStorage.setItem(this.localStorageKey, JSON.stringify(jobs)); // Save fetched jobs to local storage
-          return jobs;
-        })
-      );
-    }
-  }
+  //   } else {
+  //     return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
+  //       map((response) => {
+  //         const jobs = response.results;
+  //         localStorage.setItem(this.localStorageKey, JSON.stringify(jobs)); // Save fetched jobs to local storage
+  //         return jobs;
+  //       })
+  //     );
+  //   }
+  // }
   // getJobs(): Observable<Job[]> {
   //   const savedJobs = localStorage.getItem(this.localStorageKey);
   //   const jobs = savedJobs ? JSON.parse(savedJobs) : [];

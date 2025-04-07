@@ -1,2 +1,8 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+html, body, ion-app, ion-content {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  

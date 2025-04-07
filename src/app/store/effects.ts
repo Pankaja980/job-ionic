@@ -30,19 +30,42 @@ export class JobEffects {
     )
   );
 
+  // loadJobs$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(JobActions.loadJobs),
+  //     tap(() => console.log('loadJobs action dispatched!')), 
+  //     mergeMap(() =>
+  //       this.jobService.getJobs().pipe(
+  //         tap(jobs => console.log('Fetched jobs from API:', jobs)),
+  //         map((jobs:Job[]) => JobActions.loadJobsSuccess({ jobs })),
+  //         catchError(() => of({ type: '[Job] Load Jobs Failed' }))
+  //       )
+  //     )
+  //   )
+  // );
   loadJobs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(JobActions.loadJobs),
-      tap(() => console.log('loadJobs action dispatched!')), 
-      mergeMap(() =>
-        this.jobService.getJobs().pipe(
-          tap(jobs => console.log('Fetched jobs from API:', jobs)),
-          map((jobs:Job[]) => JobActions.loadJobsSuccess({ jobs })),
-          catchError(() => of({ type: '[Job] Load Jobs Failed' }))
-        )
-      )
+      withLatestFrom(this.store.select(selectJobs)), // Get current state
+      mergeMap(([_, existingJobs]) => {
+        const savedJobs = localStorage.getItem(this.jobService.localStorageKey);
+        const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+  
+        if (jobs.length > 0) {
+          console.log('Loading jobs from local storage:', jobs);
+          return of(JobActions.loadJobsSuccess({ jobs })); // Return local storage jobs
+        } else {
+          console.log('Fetching jobs from API...');
+          return this.jobService.getJobs().pipe(
+            tap(jobs => localStorage.setItem(this.jobService.localStorageKey, JSON.stringify(jobs))), // Store jobs
+            map((jobs: Job[]) => JobActions.loadJobsSuccess({ jobs })),
+            catchError(() => of({ type: '[Job] Load Jobs Failed' }))
+          );
+        }
+      })
     )
   );
+  
   addJob$ = createEffect(() =>
     this.actions$.pipe(
       ofType(JobActions.addJob),

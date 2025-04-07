@@ -18,10 +18,13 @@ export const selectJobs = createSelector(
 export const selectJobStatusCounts = createSelector(
   selectJobs,
   (jobs) => {
+    
     if (!jobs) return {}; 
     return jobs.reduce((acc, job) => {
+      const status = job.status || 'Applied';
       acc[job.status] = (acc[job.status] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
   }
+  
 );

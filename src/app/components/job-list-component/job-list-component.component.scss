@@ -16,7 +16,7 @@
 
   app-job-level-selector-component, ion-select {
     flex: 1;
-    min-width: 150px;
+    max-width: 150px;
    
   }
 
@@ -34,22 +34,33 @@
 }
 .charts-container {
   display: flex;
-  justify-content: space-around;
+  flex-direction: row; 
+  justify-content: space-between;
   flex-wrap: wrap;
-  padding: 20px;
+  padding-bottom: 100px;
   width: 100%;
-  max-width: 600px;
+  max-width: 1200px;
   margin: 20px auto;
-  // height: 400px;
+  //  height: auto;
+   position: relative;
+   align-items: flex-start;
 }
 .chart {
-  width: 45%;
-  min-width: 300px;
-  text-align: center;
-  height:300px;
+  flex: 1; 
+  // width: 45%;
+  min-width: 400px;
+  // text-align: center;
+  height:450px;
+  margin: 10px;
 }
 canvas {
-  max-width: 100% !important;
+  width: 100% !important;
   // height: auto !important;
+  height:auto !important;
+  max-height: 350px !important;
+}
+.job-viewport {
+  height: 100%;
+  width: 100%;
 }
   
