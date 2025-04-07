@@ -132,7 +132,7 @@ export class JobListComponent implements OnInit, AfterViewInit {
         type: 'bar' as ChartType,
         data: {
           labels: [],
-          datasets: [{ label: 'Job Levels', data: [], backgroundColor: ['#3498db', '#f39c12', '#2ecc71'] }],
+          datasets: [{ label: 'Job Levels', data: [], backgroundColor: ['#3498db', '#f39c12', '#2ecc71','#b57edc'] }],
         },
         options: { responsive: true, maintainAspectRatio: false },
       });
