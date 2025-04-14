@@ -2,29 +2,33 @@
   <!-- job-list-component.component.html -->
 <ion-header>
   <ion-toolbar color="primary">
-    <div class="header-container">
-    <ion-title><h1>Job Tracker</h1></ion-title>
+   
+    <ion-title slot="start">Job Tracker</ion-title>
     
-      <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
+      
 
-    <app-job-level-selector-component
-  
-    (levelSelected)="onLevelChange($event)"
-  ></app-job-level-selector-component>
-
-    <ion-buttons>
+    <ion-buttons slot="end">
       <ion-button (click)="addJob()" >
         <ion-icon name="add-outline"></ion-icon> Add Job
       </ion-button>
     </ion-buttons>
-    </div>
+   
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding" >
+
+
+<ion-content>
+  <div class="header-container">
+    <ion-searchbar (ionInput)="onSearch($event)" placeholder="Search jobs"></ion-searchbar>
   
+      <app-job-level-selector-component
+    
+      (levelSelected)="onLevelChange($event)"
+    ></app-job-level-selector-component>
+    </div>
    
-  <ion-col size="12">
+  <ion-col >
  
  
   <ion-list >
@@ -52,13 +56,19 @@
     </ion-item>
     </ng-container>
   </ion-list>
-
+  <ion-modal [isOpen]="displayDialog" (didDismiss)="onCancel()" [breakpoints]="[0, 0.5, 0.8]" initialBreakpoint="0.5"
+  [presentingElement]="presentingElement">
+    <ng-template>
   <app-job-form-component
+  
   [job]="selectedJob"
+  
   [displayDialog]="displayDialog"
   (saveJob)="onJobSave($event)"
   (cancel)="onCancel()">
 </app-job-form-component>
+</ng-template>
+</ion-modal>
 </ion-col>
 
 

@@ -8,7 +8,7 @@ export const selectJobState = createFeatureSelector<JobState>('job');
 export const selectJobLevels = createSelector(
   //(state: AppState) => state.job, // Ensure 'jobs' slice exists
   selectJobState,
-  (jobState: JobState) => jobState?.jobLevels ?? [] 
+  (state) => state?.jobLevels ?? [] 
 );
 
 export const selectJobs = createSelector(

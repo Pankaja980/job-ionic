@@ -10,7 +10,7 @@ import{ IonicModule } from '@ionic/angular';
 import { JobFormComponent } from '../job-form-component/job-form-component.component';
 import { AlertController } from '@ionic/angular';
 import{ScrollingModule} from '@angular/cdk/scrolling';//for virtual scrolling
-//import { ChartModule } from 'primeng/chart';
+import {ModalController} from '@ionic/angular';
 import {
   FormsModule,
   FormGroup,
@@ -70,14 +70,14 @@ export class JobListComponent implements OnInit, AfterViewInit {
 
   barChart!: Chart;
   doughnutChart!: Chart;
-
-  
   searchText: string = '';
+  presentingElement: HTMLElement | null = null;
 
   constructor(
     private store: Store,
     private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef ,
+    private modalController: ModalController,
    private alertController: AlertController
   ) {
     this.jobs$ = this.store.select(selectJobs);
@@ -102,7 +102,7 @@ export class JobListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void { //create both chart after view init and updates chart when changes done
       this.createBarChart();
       this.createDoughnutChart();
-
+      this.presentingElement = document.querySelector('ion-router-outlet');
       this.jobs$
       .subscribe((jobs) => {
          const updatedJobs = jobs.map((job) => ({
@@ -270,7 +270,7 @@ export class JobListComponent implements OnInit, AfterViewInit {
   }
 
   addJob(): void {
-    
+    console.log('Adding new job...');
     this.jobForm.reset();
     this.selectedJob = null;
     this.displayDialog = true;
@@ -279,9 +279,9 @@ export class JobListComponent implements OnInit, AfterViewInit {
     
     this.cdr.detectChanges();
   }
-
-
+  
   editJob(job: Job): void {
+    console.log('Editing job:',JSON.stringify(job, null, 2) );
     this.isEditMode = true;
     this.editingJobId = job.id;
     this.selectedJob = { ...job };
@@ -293,9 +293,6 @@ export class JobListComponent implements OnInit, AfterViewInit {
     });
     this.displayDialog = true;
   }
-
-
-
 
   onJobSave(job: Job): void {
     if (this.isEditMode && this.editingJobId) {

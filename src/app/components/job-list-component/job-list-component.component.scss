@@ -4,20 +4,27 @@
   justify-content: space-between;
   gap: 10px;
   padding: 10px;
+  flex-wrap: wrap; // Prevent wrap to keep one horizontal line
 
   ion-title {
-    flex-grow: 1;
+    flex: 1;
+    font-size: 1.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   ion-searchbar {
     flex: 2;
-    min-width: 250px;
+    min-width: 200px;
+    --min-height: 40px;
   }
 
-  app-job-level-selector-component, ion-select {
+  app-job-level-selector-component,
+  ion-select {
     flex: 1;
-    max-width: 150px;
-   
+    max-width: 130px;
   }
 
   ion-buttons {
@@ -29,38 +36,163 @@
       align-items: center;
       gap: 5px;
       font-weight: bold;
+      white-space: nowrap;
     }
   }
 }
 .charts-container {
   display: flex;
-  flex-direction: row; 
-  justify-content: space-between;
   flex-wrap: wrap;
-  padding-bottom: 100px;
-  width: 100%;
+  justify-content: space-between;
+
+  padding: 20px;
   max-width: 1200px;
-  margin: 20px auto;
-  //  height: auto;
-   position: relative;
-   align-items: flex-start;
+  margin: 0 auto;
+  overflow: visible;
 }
+
+/* Individual chart */
 .chart {
-  flex: 1; 
-  // width: 45%;
-  min-width: 400px;
-  // text-align: center;
-  height:450px;
+  flex: 1 1 400px;
+  max-width: 48%;
+  // height: auto;
+  min-height: 350px;
+  // max-height: 500px;
   margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // overflow: hidden; 
 }
+
+/* Ensure canvas scales properly */
 canvas {
   width: 100% !important;
-  // height: auto !important;
-  height:auto !important;
-  max-height: 350px !important;
+  height: auto !important;
+  max-height: 400px !important;
+  display: block;
 }
-.job-viewport {
-  height: 100%;
+
+/* Prevent overflow */
+html, body, ion-app, ion-content {
+  overflow-x: hidden;
   width: 100%;
+  box-sizing: border-box;
 }
+
+/* Responsive adjustments for medium screens (phones in landscape and smaller tablets) */
+@media (max-width: 768px) {
+  .header-container {
+    gap: 6px;
+    padding: 8px;
+
+    ion-title {
+      font-size: 1.2rem;
+    }
+
+    ion-searchbar {
+      flex: 2;
+      min-width: 120px;
+      --padding-start: 0;
+      --padding-end: 0;
+    }
+
+    app-job-level-selector-component,
+    ion-select {
+      flex: 1;
+      max-width: 90px;
+    }
+
+    ion-buttons {
+      ion-button {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+      }
+    }
+  }
+}
+
+/* For very small screens, typical of Android phones in portrait (e.g., 480px and below) */
+@media (max-width: 480px) {
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+    // padding: 6px 8px;
+    gap: 4px;
+    //background-color: white;
+ // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // optional subtle shadow
+  z-index: 100; // keeps it above other content if needed
+ // border-radius: 8px; // optional polish
+ // margin-top: 10px;
+  // ← temporary border to make sure it's not 0 height
+  padding: 10px;
+  //height: 150px;
+    ion-title,
+    ion-searchbar,
+    ion-buttons {
+      display: inline-block;
+      width: auto;
+      min-width: 80px;
+      margin: 5px 5px 0 0;
+      vertical-align: middle;
+    }
+    ion-title {
+      font-size: 1rem;
+      flex:none;
+    }
+
+    ion-searchbar {
+      min-width: 100px;
+      font-size: 0.85rem;
+      background-color: white;
+      flex:1;
+      --background: #ffffff;
+      --color: #000000;
+      --placeholder-color: #888888;
+      --icon-color: #000000;
+    }
+
+    // app-job-level-selector-component,
+    // ion-select {
+    //   max-width: 80px;
+    //   background-color: white;
+    // }
+
+    ion-buttons {
+      ion-button {
+        font-size: 0.7rem;
+        padding: 4px 6px;
+        white-space: nowrap;
+      }
+    }
+    app-job-level-selector-component, ion-select {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      margin-top: 10px;
+    }
+    ::ng-deep ion-modal {
+      --height: auto;
+      --border-radius: 16px;
+    }
+    
+  }
   
+  .charts-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chart {
+    max-height: 400px;
+    max-width: 100%;
+    flex: 1 1 100%;
+    margin: 10px 0;
+  }
+  canvas {
+    // width: 100% !important;
+    height: auto !important;
+    max-height: 300px !important;
+    // max-height: none !important;
+  }
+}

@@ -1,7 +1,12 @@
 {
   "name": "job-tracker-app",
   "integrations": {
-    "capacitor": {}
+    "cordova": {
+      "platforms": [
+        "browser",
+        "android"
+      ]
+    }
   },
   "type": "angular-standalone"
 }

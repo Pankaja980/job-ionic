@@ -18,31 +18,49 @@ export class JobEffects {
   private jobService= inject(JobService);
   private store=inject(Store);
 
-  loadJobLevels$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(JobActions.loadJobLevels),
-      mergeMap(() =>
-        this.jobService.getJobLevels().pipe(
-          map((levels) => JobActions.loadJobLevelsSuccess({ levels })),
-          catchError(() => of({ type: '[Job] Load Job Levels Failed' }))
-        )
-      )
-    )
-  );
-
-  // loadJobs$ = createEffect(() =>
+  // loadJobLevels$ = createEffect(() =>
   //   this.actions$.pipe(
-  //     ofType(JobActions.loadJobs),
-  //     tap(() => console.log('loadJobs action dispatched!')), 
+  //     ofType(JobActions.loadJobLevels),
   //     mergeMap(() =>
-  //       this.jobService.getJobs().pipe(
-  //         tap(jobs => console.log('Fetched jobs from API:', jobs)),
-  //         map((jobs:Job[]) => JobActions.loadJobsSuccess({ jobs })),
-  //         catchError(() => of({ type: '[Job] Load Jobs Failed' }))
+  //       this.jobService.getJobLevels().pipe(
+  //         tap(levels => console.log('Received levels:', levels)),
+  //         map((levels) => JobActions.loadJobLevelsSuccess({ levels })),
+  //         catchError(() => of({ type: '[Job] Load Job Levels Failed' }))
   //       )
   //     )
   //   )
   // );
+
+  loadJobLevels$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(JobActions.loadJobLevels),
+      mergeMap(() => {
+        // Get the saved jobs from local storage
+        const savedJobs = localStorage.getItem(this.jobService.localStorageKey);
+        const jobs: Job[] = savedJobs ? JSON.parse(savedJobs) : [];
+        
+        // Extract the levels from these jobs
+        const allLevels = jobs.reduce((acc: string[], job: Job) => {
+          if (job.levels && Array.isArray(job.levels)) {
+            acc.push(...job.levels.map(level => level.name));
+          }
+          return acc;
+        }, []);
+        
+        // Remove duplicate levels by converting to a Set and back to an array
+        const uniqueLevels = Array.from(new Set(allLevels));
+        
+        // Dispatch the loadJobLevelsSuccess action with these levels
+        return of(JobActions.loadJobLevelsSuccess({ levels: uniqueLevels }));
+      }),
+      catchError(error => {
+        console.error('Error loading levels from local storage:', error);
+        return of({ type: '[Job] Load Job Levels Failed' });
+      })
+    )
+  );
+  
+
   loadJobs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(JobActions.loadJobs),

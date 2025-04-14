@@ -16,14 +16,9 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
+import {ModalController} from '@ionic/angular';
 import { Job } from '../../models/job';
 import {IonicModule} from '@ionic/angular';
-// import { DropdownModule } from 'primeng/dropdown';
-// import { CommonModule } from '@angular/common';
-// import { ButtonModule } from 'primeng/button';
-// import { DialogModule } from 'primeng/dialog';
-// import { InputTextModule } from 'primeng/inputtext';
-// import { IftaLabelModule } from 'primeng/iftalabel';
 
 @Component({
   selector: 'app-job-form-component',
@@ -31,16 +26,13 @@ import {IonicModule} from '@ionic/angular';
   styleUrls: ['./job-form-component.component.scss'],
   standalone: true, // ✅ Standalone component mode
   imports: [
-   // DropdownModule,
     FormsModule,
     CommonModule,
-    // ButtonModule,
-    // DialogModule,
+    
     ReactiveFormsModule,
     IonicModule,
-    // InputTextModule,
-    // IftaLabelModule
-  ], // Ensure proper module imports
+    
+  ], 
 })
 export class JobFormComponent implements OnInit {
   @Input() job: Job | null = null;
@@ -70,7 +62,9 @@ export class JobFormComponent implements OnInit {
   // closeDialog() {
   //   this.displayDialog = false;
   // }
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private modalController: ModalController  
+  ) {}
 
   ngOnInit(): void {
     
